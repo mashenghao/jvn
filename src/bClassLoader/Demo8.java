@@ -1,5 +1,6 @@
 package bClassLoader;
 
+import bean.Demo8User;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
@@ -27,6 +28,8 @@ public class Demo8 {
         System.out.println("两个类对象是否相等   " + (clazz1 == clazz2));
         Object obj1 = clazz1.newInstance();
         Object obj2 = clazz2.newInstance();
+
+        System.out.println(Demo8User.class.getClassLoader());
         /**
          *     public void setUser(Demo8User demo8User) {
          *         this.user = demo8User;
@@ -46,8 +49,10 @@ public class Demo8 {
          *      同一类型。
          *      <p>
          *      2.当获取setUser(Demo8User obj)时，如果传入的参数是Method method = clazz1.getMethod("setUser", Demo8User.class);，
-         *      则会出现错误Caused by: java.lang.ClassNotFoundException: bean.Demo8User，因为这里的Demo8User.class，是loader2加载的类，
-         *      所以，找不到clazz2对象，要想获取方法，需要制定参数的class为clazz1，即loader1加载的class对象。
+         *      则会出现错误Caused by: java.lang.ClassNotFoundException: bean.Demo8User，
+         *      解释1： 因为这里的Demo8User.class，是loader2加载的类，所以，找不到clazz2对象.
+         *      解释2：这里的Demo8User.class被删除了，所以在getMethod时，重新加载时候，加载不到，会报找不到异常。
+         *      要想获取方法，需要制定参数的class为clazz1，即loader1加载的class对象。
          *       <p>
          *      3.保证2的加载正确，测试method.invoke(obj1, obj？);当放入obj1和obj2之间会有什么不同，
          *      obj1,显然执行正常，方法时clazz1对象的，参数也是clazz1的实例所以执行正常
